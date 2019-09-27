@@ -7,10 +7,8 @@ const app = express();
 const server = http.Server(app);
 
 app.get('/lyrics', (req, res) => {
-    const requestSongName = req.query.song_name;
-    const requestArtistName = req.query.artist_name;
-    const songName = requestSongName.toLowerCase().replace(/ /g, '-');
-    let artistName = requestArtistName.toLowerCase().replace(/ /g, '-');
+    const songName = clearRequestParameterChars(req.query.song_name);
+    let artistName = clearRequestParameterChars(req.query.artist_name);
     artistName = artistName.charAt(0).toUpperCase() + artistName.substr(1);
     fetch(`https://genius.com/${artistName}-${songName}-lyrics`)
         .then(res => res.text())
@@ -24,5 +22,9 @@ app.get('/lyrics', (req, res) => {
             res.send(e);
         });
 });
+
+function clearRequestParameterChars(requestParam) {
+    return requestParam.toLowerCase().replace(/ /g, '-').replace(/,/g, '').replace(/'/g, '').replace(/[{()}]/g, '').split('.').join('');
+}
 
 server.listen(PORT);
