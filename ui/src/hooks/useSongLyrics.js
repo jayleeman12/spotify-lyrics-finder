@@ -5,23 +5,19 @@ export default function useSongLyrics(songs) {
     useEffect(() => {
         if (songs && songs !== []) {
             songs.forEach(song => {
-                const songName = song.name.toLowerCase().replace(/ /g, '-');
-                let artistName = song.artist.toLowerCase().replace(/ /g, '-');
-                artistName = artistName.charAt(0).toUpperCase() + artistName.substr(1);
-                fetch(`https://genius.com/${artistName}-${songName}-lyrics`, {
-                    headers: {
-                        "Content-Type": "text/html; charset=utf-8"
-                    }
-                })
+                fetch(`http://localhost:8090/lyrics?song_name=${song.name}&artist_name=${song.artist}`)
                     .then(res => res.text())
-                    .then(html => {
-                        console.log(html);
+                    .then(lyrics => {
+                        setSongLyrics(previousSongLyrics => [
+                            ...previousSongLyrics,
+                            {
+                                ...song,
+                                lyrics: lyrics
+                            }
+                        ]);
                     })
-                    .catch(e => {
-                        console.log(e);
-                    });
             });
         }
-    }, [songs])
+    }, [songs]);
     return songLyrics;
 }

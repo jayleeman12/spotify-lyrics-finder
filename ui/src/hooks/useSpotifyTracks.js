@@ -34,12 +34,12 @@ export default function useSpotifyTracks(tokenType, tokenValue) {
                         }
                     })]);
                 if (json.next) {
-                    // fetchTracks(json.next);
+                    fetchTracks(json.next);
                 }
             });
         }
         if (tokenType && tokenValue) {
-            fetchTracks('https://api.spotify.com/v1/me/tracks?limit=1&offset=0');
+            fetchTracks('https://api.spotify.com/v1/me/tracks?limit=50&offset=0');
         }
     }, [tokenType, tokenValue]);
     return trackItems;

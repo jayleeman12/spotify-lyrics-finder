@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
+import SearchResults from './SearchResults';
 import styled from 'styled-components';
 import useSpotifyTracks from '../hooks/useSpotifyTracks';
 import { parseUrl } from '../utils';
@@ -15,6 +16,7 @@ const PageContainer = styled.div`
 const SearchPage = props => {
     const [tokenType, setTokenType] = useState('');
     const [tokenValue, setTokenValue] = useState('');
+    const [query, setQuery] = useState('');
     useEffect(() => {
         const result = parseUrl(window.location.hash);
         setTokenType(result.token_type);
@@ -23,12 +25,14 @@ const SearchPage = props => {
     const trackItems = useSpotifyTracks(tokenType, tokenValue);
     const songLyrics = useSongLyrics(trackItems);
     const onQueryChanged = (query) => {
-        console.log(query);
+        setQuery(query);
     }
     return (
         <PageContainer>
             <h1>Lyrics Searcher</h1>
             <SearchBar onQueryChanged={onQueryChanged} />
+            <p>{songLyrics.length} / {trackItems.length}</p>
+            <SearchResults songs={songLyrics} query={query} />
         </PageContainer>
     )
 };
